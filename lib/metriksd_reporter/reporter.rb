@@ -1,5 +1,6 @@
 require 'snappy'
 require 'msgpack'
+require 'socket'
 
 module MetriksdReporter
   class Reporter
@@ -25,8 +26,7 @@ module MetriksdReporter
     end
 
     def start
-      @socket ||= UDPSocket.new
-
+      setup_socket
       @thread ||= Thread.new do
         loop do
           sleep_until_deadline
@@ -38,6 +38,10 @@ module MetriksdReporter
           end
         end
       end
+    end
+
+    def setup_socket
+      @socket ||= UDPSocket.new
     end
 
     def stop
